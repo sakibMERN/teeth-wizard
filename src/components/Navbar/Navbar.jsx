@@ -1,7 +1,25 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import "./Navbar.css";
+import { useContext } from "react";
+import { authContext } from "../AuthProvider/AuthProvider";
 
 const Navbar = () => {
+  const {user,setUser, handleLogOut} = useContext(authContext);
+  const navigate = useNavigate();
+ 
+  console.log(user);
+
+  const logOutHandler = () => {
+    
+    handleLogOut()
+    .then(()=> {
+      setUser(null);
+      navigate('/')
+  })
+  .catch(err => {
+      console.log(err);
+  })
+  }
   return (
     <div className="w-full min-h-20 bg-blue-950 text-white text-opacity-85 flex justify-between items-center px-10 ">
       <div>
@@ -14,7 +32,10 @@ const Navbar = () => {
         <NavLink to="profile">Profile</NavLink>
       </div>
       <div>
-        <button className="btn btn-primary">Login</button>
+        
+        {
+          user ? (<button onClick={logOutHandler} className="btn btn-warning">LogOut</button>) : (<Link to={'/login'} className="btn btn-primary">Login</Link>)
+        }
       </div>
       
     </div>
